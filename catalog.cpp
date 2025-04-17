@@ -268,3 +268,32 @@ Database Database::load_from_file(const std::string& filename) {
     }
     return db;
 }
+
+void Database::DeleteDS(const std::string& table_name) {
+    if (tables_.find(table_name) == tables_.end()) {
+        std::cerr << "Error: Table '" << table_name << "' not found in database.\n";
+        throw std::runtime_error("Table not found");
+    }
+
+    // 1. Remove schema from catalog
+    auto& schemas = catalog_.schema_catalog.schemas;
+    schemas.erase(
+        std::remove_if(schemas.begin(), schemas.end(),
+            [&](const TableSchema& s) { return s.name == table_name; }),
+        schemas.end()
+    );
+
+    // 2. Remove related relationships
+    auto& relationships = catalog_.relationships;
+    relationships.erase(
+        std::remove_if(relationships.begin(), relationships.end(),
+            [&](const RelationshipMetadata& rel) {
+                return rel.owner.table_name == table_name || 
+                       rel.member.table_name == table_name;
+            }),
+        relationships.end()
+    );
+
+    // 3. Remove physical data
+    tables_.erase(table_name);
+}

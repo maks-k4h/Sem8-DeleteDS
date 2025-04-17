@@ -98,14 +98,7 @@ public:
 
     void print() const;
 
-    void deleteDS(const std::string& ds_name) {
-        catalog_.relationships.erase(
-            std::remove_if(catalog_.relationships.begin(), catalog_.relationships.end(),
-                           [&ds_name](const RelationshipMetadata& rel) {
-                               return rel.name == ds_name;
-                           }),
-            catalog_.relationships.end());
-    }
+    void DeleteDS(const std::string& table_name);
     
 private:
     SystemCatalog catalog_;

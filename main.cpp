@@ -196,7 +196,7 @@ int main() {
     std::cout << "\nTesting serialization!!!\n\n";
     auto db1 = Database::load_from_file("coffee.db");
     db1.print();
-    db1.deleteDS("CompanyCafeterias");
+    db1.DeleteDS("Worker");
     db1.save_to_file("coffee1.db");
 
     return 0;
